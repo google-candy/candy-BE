@@ -1,7 +1,8 @@
 import openai
 import split
 import connectFirebase
-openai.api_key = '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'
+import config
+openai.api_key = config.api_key
 
 
 conversation_history = ""
