@@ -11,15 +11,24 @@ ref = client.document('diaries/gptDB')
 
 
 def store_seperate(question, answer):
-    ref.set({
+    ref.update({
         'question' : question,
         'answer' : answer
     })
 
 
 def store_both(chat):
-    ref.set({
+    ref.update({
         'chat' : chat
     })
 
+def store_summary(summary):
+    ref.update({
+        'summaray':summary
+    })
+
+def store_emotions(emotions):
+    ref.update({
+        'emoitons':emotions
+    })
 
