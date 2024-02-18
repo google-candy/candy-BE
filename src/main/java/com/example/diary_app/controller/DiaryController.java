@@ -1,6 +1,6 @@
 package com.example.diary_app.controller;
 
-import com.example.diary_app.entity.Diary;
+import com.example.diary_app.DTO.DiaryDto;
 import com.example.diary_app.service.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,9 +19,10 @@ public class DiaryController {
     @Autowired
     private DiaryService diaryService;
 
-    @GetMapping("/byDate")
-    public List<Diary> getDiariesByDate(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
-        return diaryService.getDiariesByDate(date);
+    @GetMapping("/search")
+    public List<DiaryDto> getDiariesByDate(
+            @RequestParam("date")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return diaryService.findDiariesByDate(date);
     }
 }
-
