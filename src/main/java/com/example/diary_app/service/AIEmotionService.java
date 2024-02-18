@@ -21,7 +21,7 @@ public class AIEmotionService {
         return aiEmotionRepository.findAll().stream().map(AIEmotion -> {
             AIEmotionDto dto = new AIEmotionDto();
             dto.setAIEmotionName(AIEmotion.getAi_emotion_name());
-            dto.setEmotionImage(AIEmotion.getEmotionCategory().getEmotion_image());
+            dto.setEmotionImage(AIEmotion.getEmotionCategory().getEmotionImage());
             return dto;
         }).collect(Collectors.toList());
     }
