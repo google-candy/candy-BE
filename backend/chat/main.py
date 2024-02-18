@@ -21,14 +21,13 @@ def cumulative_input(
 ):
     # 이전 대화 내용 업데이트
     converation_history += f"{USERNAME}: {input_str}\n"
-    # print("---------------conversation_history_input------------------\n ",conversation_history)
     # print("\n")
     # gpt로 응답 생성
     message = get_response(converation_history)
 
     # 이전 대화 응답 내용 업데이트
-    # converation_history += f"{AI_NAME}: {message}\n"
-    converation_history += f"{message}\n"
+    converation_history += f"{AI_NAME}: {message}\n"
+    # converation_history += f"{message}\n"
 
 
 # 응답 출력하기
@@ -124,7 +123,7 @@ def main():
         user_input = input(f"{USERNAME}: ")
         conversation_history = chat
 
-    conversation_history += f"{user_input}\n"
+    conversation_history += f"{USERNAME}: {user_input}\n"
 
     # 마지막 답변에 대한 반응
     las_message = last_response(conversation_history)
@@ -137,7 +136,11 @@ def main():
     # 요약본 생성
     summary = summarize(conversation_history)
     print("[오늘 일기의 요약본]\n", summary)
-    # conversation_history += f"{AI_NAME}: {summary}\n"
+
+
+    # # conversation_history += f"{AI_NAME}: {summary}\n"
+
+
 
     # 파이어베이스 저장
     user_context, ai_context = split.seperate_conversation(conversation_history)
@@ -150,7 +153,7 @@ def main():
     print("emotions: ", emotions)
     print("\n")
 
-    emotion_list = emotions.split(',')
+    emotion_list = emotions.split(', ')
 
     # 감정 텍스트 분류
     emotion_category = []
@@ -170,7 +173,7 @@ def main():
 
 
     for i in range(4):
-        connectMySQL.insert_data(emotion_category[i], emotion_category_id[i])
+        connectMySQL.insert_data(emotion_list[i], emotion_category_id[i])
     #
 
 
