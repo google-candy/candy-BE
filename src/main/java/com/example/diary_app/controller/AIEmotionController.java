@@ -19,6 +19,7 @@ public class AIEmotionController {
         this.aiEmotionService = aiEmotionService;
     }
 
+
     @GetMapping
     public List<AIEmotionDto> getAllAiEmotionsWithEmotionCategory() {
         return aiEmotionService.findAllAIEmotionsWithEmotionCategory();
