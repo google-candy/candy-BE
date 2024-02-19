@@ -25,5 +25,9 @@ public class AIEmotionService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    public void deleteAllAIEmotions() {
+        aiEmotionRepository.deleteAll();
+    }
 }
 
