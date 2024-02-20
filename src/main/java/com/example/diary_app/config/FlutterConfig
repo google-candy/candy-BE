@@ -1,0 +1,16 @@
+package com.example.candysihyeon.config;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class FlutterConfig {
+
+    @Bean
+    public FlutterEngine flutterEngine(){
+        FlutterEngine flutterEngine = new FlutterEngine(new DartExecutor());
+        FlutterEngineCache.getInstance().put("flutter_engine", flutterEngine);
+        return flutterEngine;
+    }
+}

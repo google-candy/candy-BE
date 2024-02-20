@@ -28,7 +28,12 @@ public class AIEmotionController {
         this.userEmotionService = userEmotionService;
     }
 
+<<<<<<< HEAD
     @GetMapping("/ai-emotions")
+=======
+
+    @GetMapping
+>>>>>>> a72327ebc6d273f8b5dd3ad0f5c9898c61ed47ca
     public List<AIEmotionDto> getAllAiEmotionsWithEmotionCategory() {
         return aiEmotionService.findAllAIEmotionsWithEmotionCategory();
     }

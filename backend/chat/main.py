@@ -161,10 +161,10 @@ def main():
         emotion_category.append(sortEmotion.classify_emotions_with_openai(emotion_list[i]))
 
 
-    count = 0
-    for i in emotion_category:
-        print(i)
-        count+=1
+    # count = 0
+    # for i in emotion_category:
+    #     print(i)
+    #     count+=1
 
 
     emotion_category_id=[]
@@ -181,3 +181,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+    # input 값으로 직접 입력받는게 아니라 스프링부트에서 준 값을 받아오기
