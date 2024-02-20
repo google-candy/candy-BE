@@ -1,6 +1,6 @@
 import pymysql
 
-#conn = pymysql.connect(host='#', user='root', password='*****', db='myDiary', charset='utf8')
+conn = pymysql.connect(host='104.198.176.69', user='root', password='candy', db='myDiary', charset='utf8')
 
 # 커서 생성
 cur = conn.cursor()
