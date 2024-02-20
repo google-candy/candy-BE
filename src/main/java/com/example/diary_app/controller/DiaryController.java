@@ -25,4 +25,6 @@ public class DiaryController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return diaryService.findDiariesByDate(date);
     }
+
+
 }
