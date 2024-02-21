@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Client</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<h2>WebSocket Test</h2>
+<form onsubmit="sendMessage(event)">
+    <input type="text" id="messageInput" placeholder="Enter a message">
+    <button type="submit">Send</button>
+</form>
+<div id="messages"></div>
+
+<script type="text/javascript">
+        var stompClient = null;
+
+        function connect() {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/message', function(messageOutput) {
+                    showMessageOutput(JSON.parse(messageOutput.body));
+                });
+            });
+        }
+
+        function sendMessage(event) {
+            event.preventDefault();
+            var messageContent = document.getElementById('messageInput').value.trim();
+            if(messageContent && stompClient) {
+                var chatMessage = {
+                    content: messageContent
+                };
+                stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+                document.getElementById('messageInput').value = '';
+            }
+        }
+
+        function showMessageOutput(messageOutput) {
+            var messagesDiv = document.getElementById('messages');
+            var messageParagraph = document.createElement('p');
+            messageParagraph.appendChild(document.createTextNode(messageOutput.content));
+            messagesDiv.appendChild(messageParagraph);
+        }
+
+        connect();
+    </script>
+</body>
+</html>

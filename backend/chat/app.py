@@ -36,7 +36,7 @@ def get_response(prompt):
 @app.route('/api/chat/message', methods=['POST'])
 def process_message_ing():
     data = request.json
-    user_input = data['message']
+    user_input = data['content']
 
     # 이전 대화 히스토리 가져오기
     history = connectFirebase.get_history()
