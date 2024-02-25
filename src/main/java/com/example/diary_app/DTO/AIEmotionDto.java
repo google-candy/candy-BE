@@ -2,14 +2,14 @@ package com.example.diary_app.DTO;
 
 public class AIEmotionDto {
     private String ai_emotion_name;
-    private byte[] emotion_image;
+    private String emotion_image; // byte[] 대신 String 타입으로 변경
 
     // 기본 생성자
     public AIEmotionDto() {
     }
 
     // 모든 필드를 포함하는 생성자
-    public AIEmotionDto(String ai_emotion_name, byte[] emotion_image) {
+    public AIEmotionDto(String ai_emotion_name, String emotion_image) {
         this.ai_emotion_name = ai_emotion_name;
         this.emotion_image = emotion_image;
     }
@@ -24,13 +24,13 @@ public class AIEmotionDto {
         this.ai_emotion_name = ai_emotion_name;
     }
 
-    // emotionImage의 getter
-    public byte[] getEmotionImage() {
+    // emotionImage의 getter. byte[] 대신 String 반환
+    public String getEmotionImage() {
         return emotion_image;
     }
 
-    // emotionImage의 setter
-    public void setEmotionImage(byte[] emotion_image) {
+    // emotionImage의 setter. byte[] 대신 String을 받음
+    public void setEmotionImage(String emotion_image) {
         this.emotion_image = emotion_image;
     }
 
@@ -38,8 +38,7 @@ public class AIEmotionDto {
     public String toString() {
         return "AIEmotionDto{" +
                 "ai_emotion_name='" + ai_emotion_name + '\'' +
-                ", emotion_image=[...]" + // 이미지 데이터는 로그에 직접 출력하는 것이 비효율적이므로 생략
+                ", emotion_image='" + emotion_image + '\'' + // Base64 인코딩된 데이터를 안전하게 로깅
                 '}';
     }
 }
-

@@ -4,6 +4,8 @@ import com.example.diary_app.DTO.AIEmotionDto;
 import com.example.diary_app.repository.AIEmotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +23,10 @@ public class AIEmotionService {
         return aiEmotionRepository.findAll().stream().map(AIEmotion -> {
             AIEmotionDto dto = new AIEmotionDto();
             dto.setAIEmotionName(AIEmotion.getAi_emotion_name());
-            dto.setEmotionImage(AIEmotion.getEmotionCategory().getEmotionImage());
+
+            byte[] emotionImageBytes = AIEmotion.getEmotionCategory().getEmotionImage();
+            String imageBase64 = Base64.getEncoder().encodeToString(emotionImageBytes);
+            dto.setEmotionImage(imageBase64);
             return dto;
         }).collect(Collectors.toList());
     }
