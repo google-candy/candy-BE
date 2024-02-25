@@ -3,40 +3,45 @@ import split
 import connectFirebase, connectMySQL
 import config
 import sortEmotion
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+
 openai.api_key = config.api_key
 
 
-conversation_history = ""
-
-USERNAME = "USER"
-AI_NAME = "CANDY"
+global conversation_history
 
 
-# 대화내용 저장함수 제작
-def cumulative_input(
-        input_str : str,
-        converation_history : str,
-        USERNAME : str,
-        AI_NAME : str,
-):
-    # 이전 대화 내용 업데이트
-    converation_history += f"{USERNAME}: {input_str}\n"
-    # print("\n")
-    # gpt로 응답 생성
-    message = get_response(converation_history)
 
-    # 이전 대화 응답 내용 업데이트
-    converation_history += f"{AI_NAME}: {message}\n"
-    # converation_history += f"{message}\n"
+# def cumulative_input(
+#         input_str : str,
+#         converation_history : str,
+#         USERNAME : str,
+#         AI_NAME : str,
+# ):
+#     # 이전 대화 내용 업데이트
+#     converation_history += f"{USERNAME}: {input_str}\n"
+#     # print("\n")
+#     # gpt로 응답 생성
+#     message = get_response(converation_history)
+#
+#     # 이전 대화 응답 내용 업데이트
+#     converation_history += f"{AI_NAME}: {message}\n"
+#     # converation_history += f"{message}\n"
+#
+#
+# # 응답 출력하기
+# #     print(f"{AI_NAME}{AI_NAME}:\n")
+#     print(f"{message}\n")
+#     print("\n")
+#     return converation_history
 
-
-# 응답 출력하기
-#     print(f"{AI_NAME}{AI_NAME}:\n")
-    print(f"{message}\n")
-    print("\n")
-    return converation_history
-
-
+def join_input(input_message, output_response, conversation_history):
+    conversation_history += f"USER: {input_message}"
+    conversation_history += f"CANDY: {output_response}"
+    return conversation_history
 
 
 def get_response(prompt):
@@ -76,7 +81,7 @@ def summarize(prompt):
             {"role" : "user", "content" : "주어진 대화 내용을 바탕으로 'USER' 시점의 1인칭에서 오늘 하루를 요약하는 일기를 작성해주세요. "},
             {"role" : "assistant", "content" : prompt}
         ],
-        max_tokens=50,
+        max_tokens=250,
         temperature=0,
     )
     return completions.choices[0].message.content
@@ -114,18 +119,41 @@ def sentiment_analysis(diary):
         return "감정 분석 수행 불가능"
 
 
+
+
 def main():
+    ## global conversation_history
+    # conversation_history = ""
+    # user_input = input(f"{USERNAME}: ")
+    # for i in range(3):
+    #     print("질문", i)
+    #     chat = cumulative_input(user_input, conversation_history, USERNAME, AI_NAME )
+    #     user_input = input(f"{USERNAME}: ")
+    #     conversation_history = chat
+    #
+    # conversation_history += f"{USERNAME}: {user_input}\n"
+
+
+    #
+
     global conversation_history
-    user_input = input(f"{USERNAME}: ")
-    for i in range(5):
-        print("질문", i)
-        chat = cumulative_input(user_input, conversation_history, USERNAME, AI_NAME )
-        user_input = input(f"{USERNAME}: ")
+    conversation_history = ""
+    user_input = input(f"USER: ")
+    conversation_history += user_input
+    for i in range(3):
+        print(i, " 번째 질문입니다.")
+        response = get_response(conversation_history)
+        chat = join_input(user_input,response, conversation_history)
         conversation_history = chat
+        user_input = input(f"USER: ")
+    conversation_history += f"USER: {user_input}\n"
 
-    conversation_history += f"{USERNAME}: {user_input}\n"
 
-    # 마지막 답변에 대한 반응
+
+    print("\n//////////////////")
+
+
+# 마지막 답변에 대한 반응
     las_message = last_response(conversation_history)
     conversation_history += f"{las_message}\n"
 
@@ -162,7 +190,7 @@ def main():
 
 
     # count = 0
-    # for i in emotion_category:
+    # for i in emotion_category:e
     #     print(i)
     #     count+=1
 
@@ -174,14 +202,61 @@ def main():
 
     for i in range(4):
         connectMySQL.insert_data(emotion_list[i], emotion_category_id[i])
-    #
 
+
+
+
+# if __name__ == "__main__":
+#     main()
+
+# global conversation_history
+# conversation_history = ""
+# user_input = input(f"USER: ")
+# conversation_history += user_input
+# for i in range(3):
+#     print(i, " 번째 질문입니다.")
+#     response = get_response(conversation_history)
+#     chat = join_input(user_input,response, conversation_history)
+#     conversation_history = chat
+#     user_input = input(f"USER: ")
+# conversation_history += f"USER: {user_input}\n"
+
+
+
+
+# 클라이언트에게 메세지를 받고 처리한 뒤, json 형태로 답을 반환하는 api 엔드포인트('/chat-end') 생성함
+# 이 경로로 post 요청이 들어오면, process_message() 함수가 실행된다.
+@app.route('/chat-ing', methods=['POST'])
+def process_message_ing():
+    # request json을 사용해서 클라이언트로부터 받은 json 데이터를 파싱한다.
+    # 아래는 json 데이터 중 'message' 키 값에 해당되는 값을 user_input 에 저장한다.
+    data = request.json
+    user_input = data['message']
+    join_input(user_input)
+    ai_response = get_response(conversation_history)
+
+    # 어떤 로직을 거쳐 얻은 답변을 response 딕셔너리에 'reply' 키로 저장해서 jsonify(response)를 사용해
+    # json 형태로 클라이언트에게 반환
+    response = {"reply": f"{ai_response}"}
+    join_input(user_input, ai_response, conversation_history)
+
+    return jsonify(response)
+
+
+
+# 마지막 답변 전달
+@app.route('/chat-end', methods=['POST'])
+def process_message_end():
+    data = request.json
+    user_input = data['message']
+    ai_last_response = last_response(user_input)
+    response = {"last_reply":f"{ai_last_response}"}
+    return jsonify(response)
 
 
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True, port=5000)
 
 
 
-    # input 값으로 직접 입력받는게 아니라 스프링부트에서 준 값을 받아오기
