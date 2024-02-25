@@ -50,8 +50,6 @@ def process_message_ing():
     if not ai_response.startswith("CANDY: "):
         # "CANDY:"가 두 번 나온 경우를 처리하기 위해 replace를 사용하여 첫 번째 "CANDY:"만 제거
         ai_response = "CANDY: " + ai_response
-        # ai_response = ai_response.replace("\u0043\u0041\u004e\u0044\u0059\u003a\u0020\u0020\u0043\u0041\u004e\u0044\u0059\u003a\u0020: ", "", 1).strip()
-        # responses.append(cleaned_line)  # 공백 제거 후 배열에 추가
 
     history += f"{ai_response}\n"
     # history += f"{ai_response}\n"
